@@ -6,7 +6,7 @@ import fs from "fs";
 import { uploadVideo } from "../Cloudnary/config";
 import Video from "../models/Video";
 import Shorts from "../models/Shorts";
-import User from "../models/Users";
+import { CustomRequest } from "../middelware/authMiddelware";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -98,27 +98,28 @@ export const uploadVideoToCloudinary = async (
 
 
 
-export const likeVideo = async (req: Request, res: Response) => {
-  const { _id, uid } = req.body;
+export const likeVideo = async (req:CustomRequest , res: Response) => {
+  const { channelId } = req.body;
+const userId=req.user
 
 
-  if (!_id || !uid) {
+  if (!channelId || !userId) {
     res.status(400).json({ message: "User ID and Video ID are required" });
     return;
   }
 
   try {
-    const video = await Video.findById(_id);
+    const video = await Video.findById(channelId);
 
     if (!video) {
       res.status(404).json({ message: "Video not found" });
       return;
     }
 
-    if (video.likes.includes(uid)) {
-      video.likes = video.likes.filter((userId) => userId !== uid);
+    if (video.likes.includes(userId)) {
+      video.likes = video.likes.filter((userId) => userId !== userId);
       
-      video.dislikes = video.dislikes.filter((userId) => userId !== uid);
+      video.dislikes = video.dislikes.filter((userId) => userId !== userId);
 
       await video.save();
 
@@ -133,11 +134,11 @@ export const likeVideo = async (req: Request, res: Response) => {
       return;
     }
 
-    if (video.dislikes.includes(uid)) {
-      video.dislikes = video.dislikes.filter((userId) => userId !== uid);
+    if (video.dislikes.includes(userId)) {
+      video.dislikes = video.dislikes.filter((userId) => userId !== userId);
     }
 
-    video.likes.push(uid);
+    video.likes.push(userId);
     await video.save();
 
     res.status(200).json({
@@ -179,24 +180,26 @@ export const likeVideo = async (req: Request, res: Response) => {
   }
  }
 
-export const dislikeVideo = async (req: Request, res: Response) => {
-  const { _id, uid } = req.body;
+export const dislikeVideo = async (req:CustomRequest, res: Response) => {
+  const { channelId  } = req.body;
+  const userId=req.user
 
-  if (!_id || !uid) {
+  
+  if (!channelId || !userId) {
     res.status(400).json({ message: "User ID and Video ID are required" });
     return;
   }
 
   try {
-    const video = await Video.findById(_id);
+    const video = await Video.findById(channelId);
 
     if (!video) {
       res.status(404).json({ message: "Video not found" });
       return;
     }
 
-    if (video.dislikes.includes(uid)) {
-      video.dislikes = video.dislikes.filter((userId) => userId !== uid);
+    if (video.dislikes.includes(userId)) {
+      video.dislikes = video.dislikes.filter((uId) => uId !== userId);
       await video.save();
 
       res.status(200).json({
@@ -207,10 +210,10 @@ export const dislikeVideo = async (req: Request, res: Response) => {
       return;
     }
 
-    video.dislikes.push(uid);
+    video.dislikes.push(userId);
 
-    if (video.likes.includes(uid)) {
-      video.likes = video.likes.filter((userId) => userId !== uid);
+    if (video.likes.includes(userId)) {
+      video.likes = video.likes.filter((uId) => uId !== userId);
     }
 
     await video.save();

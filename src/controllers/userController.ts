@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/Users"
 import Channel from "../models/Channel";
+import { CustomRequest } from "../middelware/authMiddelware";
 
 export const CreatUser = async (req:Request, res:Response) => {
 
@@ -13,8 +14,8 @@ export const CreatUser = async (req:Request, res:Response) => {
     }
     res.status(200).json(user);
   } catch (error:any) {
-    console.error("Error saving user:", error.message); // Log error message
-    console.error("Stack trace:", error.stack); // Log error stack trace
+    console.error("Error saving user:", error.message);
+    console.error("Stack trace:", error.stack);
     res.status(500).json({ success: false, message: "Error saving user", error: error.message });
   }
 };
@@ -48,13 +49,12 @@ export const getUserById = async (req: Request, res: Response) => {
     };
 
    
-    export const subscriberChannel = async (req: Request, res: Response) => {
-      const { uid,_id } = req.body;
+    export const subscribeChannel = async (req: CustomRequest, res: Response) => {
+      const {_id } = req.body;
     
-    console.log(req.body);
     
-      
-    
+      const uid=req.uid
+
       if (!_id || !uid) {
         res.status(400).json({ message: 'Channel ID and User ID are required' });
         return;

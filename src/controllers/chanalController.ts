@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { uploadImage } from "../Cloudnary/uploadimag";
+import { CustomRequest } from "../middelware/authMiddelware";
 
 export const getAllVideos = async (req: Request, res: Response) => {
   try {
@@ -42,15 +43,7 @@ export const getAllShorts = async (req: Request, res: Response) => {
   }
 };
 
-// export const getEntairVideos = async (req: Request, res: Response) => {
-//   try {
-//     const videos = await Video.find();
-//     res.status(200).json({ videos }); 
-//   } catch (error: any) {
-//     console.error("Error fetching videos:", error.message);
-//     res.status(500).json({ error: "Failed to fetch videos" });
-//   }
-// };
+
 export const getEntairVideos = async (req: Request, res: Response) => {
   try {
 
@@ -170,8 +163,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 export const imageUpload = upload.single('image');
 
-export const createChannel = async (req: Request, res: Response): Promise<void> => {
-  const { name, userId, handil,photoURL } = req.body;
+export const createChannel = async (req: CustomRequest, res: Response): Promise<void> => {
+  const { name, handil,photoURL } = req.body;
+  const userId=req.user
 
   
   if (!name || ! userId) {

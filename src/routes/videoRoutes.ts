@@ -25,7 +25,7 @@ import {
   getAllUsers,
   getSubscribersCount,
   getUserById,
-  subscriberChannel,
+  subscribeChannel,
 } from "../controllers/userController";
 import authMiddleware from "../middelware/authMiddelware";
 const router = express.Router();
@@ -43,13 +43,13 @@ router.get("/getallusers", getAllUsers);
 router.put("/updateVideoDetails/:videoId", UpdateVideoByID);
 router.put("/updateShortsDetails/:shortsId", UpdateShortsByID);
 router.get("/short/:shortsId", getShortsById);
-router.post("/create-channel", imageUpload, createChannel);
-router.post("/subscribChannel", subscriberChannel);
+router.post("/create-channel",authMiddleware, imageUpload, createChannel);
+router.post("/subscribChannel",authMiddleware,subscribeChannel);
 router.post("/getSubscribersCount", getSubscribersCount);
 router.post("/likeVideo",authMiddleware, likeVideo);
 router.post("/likeVideoCount",videolikeCount);
 
-router.post("/dislikeVideo", authMiddleware, dislikeVideo);
+router.post("/dislikeVideo",authMiddleware, dislikeVideo);
 router.get("/getchannel", getChannels);
 router.get("/getChannelsByName", getChannelsByName);
 export default router;

@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import Comments from "../models/Comment";
 import mongoose from "mongoose";
+import { CustomRequest } from "../middelware/authMiddelware";
 
-export const addComment = async (req: Request, res: Response) => {
+export const addComment = async (req:CustomRequest, res: Response) => {
   const { videoId } = req.params;
-  const { userId, userName, userProfile, text } = req.body;
+  const {  userName, userProfile, text } = req.body;
+  const userId=req.user
+console.log('userId',userId);
 
   if (!text || !userId || !userName) {
     res.status(400).json({ message: "Missing required fields" });
