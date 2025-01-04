@@ -12,6 +12,8 @@ export interface IShorts extends Document {
   category: string; 
   isShort: boolean;
   profil:string
+  public_id: string;
+
     channelId: mongoose.Types.ObjectId; 
   
   userName:string

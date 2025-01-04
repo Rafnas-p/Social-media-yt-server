@@ -19,6 +19,8 @@ import {
   imageUpload,
   getChannels,
   getChannelsByName,
+  deleteVideoById,
+  deleteShortsById,
 } from "../controllers/chanalController";
 import {
   CreatUser,
@@ -52,4 +54,7 @@ router.post("/likeVideoCount",videolikeCount);
 router.post("/dislikeVideo",authMiddleware, dislikeVideo);
 router.get("/getchannel", getChannels);
 router.get("/getChannelsByName", getChannelsByName);
+router.delete("/deleatVideoById/:id",deleteVideoById)
+router.delete("/deleteShortsById/:id",deleteShortsById)
+
 export default router;

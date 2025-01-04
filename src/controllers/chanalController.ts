@@ -5,6 +5,7 @@ import Channel from "../models/Channel";
 import User from "../models/Users";
 import multer from "multer";
 import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import { uploadImage } from "../Cloudnary/uploadimag";
 import { CustomRequest } from "../middelware/authMiddelware";
@@ -261,3 +262,67 @@ export const getChannelsByName= async (req: Request, res: Response): Promise<voi
   }
 };
 
+
+export const deleteVideoById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  console.log(req.params);
+  
+  if (!id) {
+    res.status(404).json({ message: 'No ID provided.' });
+    return;
+  }
+
+  try {
+    const video = await Video.findById(id);
+
+    if (!video) {
+      res.status(404).json({ message: "Video not found." });
+      return;
+    }
+
+    const { public_id } = video;
+
+    if (public_id) {
+      await cloudinary.uploader.destroy(public_id, { resource_type: "video" });
+    }
+
+    await Video.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Video deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+};
+
+export const deleteShortsById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  console.log(req.params);
+  
+  if (!id) {
+    res.status(404).json({ message: 'No ID provided.' });
+    return;
+  }
+
+  try {
+    const video = await Shorts.findById(id);
+
+    if (!video) {
+      res.status(404).json({ message: "Video not found." });
+      return;
+    }
+
+    const { public_id } = video;
+
+    if (public_id) {
+      await cloudinary.uploader.destroy(public_id, { resource_type: "video" });
+    }
+
+    await Video.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Video deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error.", error });
+  }
+};

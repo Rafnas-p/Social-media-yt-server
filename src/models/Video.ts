@@ -9,6 +9,8 @@ export interface IVideo extends Document {
   duration: number;
   title: string | number;
   profil: string;
+  public_id: string;
+
   userName: string;
   likes: string[]; 
   dislikes: string[];
