@@ -51,6 +51,7 @@ export const getUserById = async (req: Request, res: Response) => {
    
     export const subscribeChannel = async (req: CustomRequest, res: Response) => {
       const {_id } = req.body;
+    console.log('sub',_id);
     
     
       const uid=req.uid
